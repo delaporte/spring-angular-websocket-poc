@@ -1,0 +1,8 @@
+/front/node_modules/
+/front/dist/
+/front/npm-debug.log
+
+/back/target
+
+*.idea/
+*.iml
