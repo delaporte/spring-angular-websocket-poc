@@ -1,6 +1,6 @@
 package net.wismas.websocket.domain;
 
-import net.wismas.websocket.ws.CounterHandler;
+import net.wismas.websocket.ws.handler.CounterHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

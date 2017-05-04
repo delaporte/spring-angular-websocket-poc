@@ -1,6 +1,5 @@
-package net.wismas.websocket.ws;
+package net.wismas.websocket.ws.handler;
 
-import net.wismas.websocket.ws.CounterHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;

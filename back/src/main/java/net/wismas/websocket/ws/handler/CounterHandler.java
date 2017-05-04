@@ -1,4 +1,4 @@
-package net.wismas.websocket.ws;
+package net.wismas.websocket.ws.handler;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Jquery websocker</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="lib/sockjs.min.js"></script>
+  <script src="lib/stomp.min.js"></script>
+</head>
+<body>
+
+<div id="wrapper">
+
+  <div id="container">
+
+    <h1>WebSockets Client</h1>
+
+    <div id="chatLog">
+
+    </div><!-- #chatLog -->
+    <p id="examples">e.g. try 'hi', 'name', 'age', 'today'</p>
+
+    <input id="text" type="text"/>
+    <button id="send">SendMessage</button>
+    <button id="disconnect">Disconnect</button>
+
+  </div><!-- #container -->
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<div id="main-content" class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <form class="form-inline">
+        <div class="form-group">
+          <label for="connect">WebSocket connection:</label>
+          <button id="connect" class="btn btn-default" type="submit">Connect</button>
+          <button id="disconnect2" class="btn btn-default" type="submit" disabled="disabled">Disconnect
+          </button>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-6">
+      <form class="form-inline">
+        <div class="form-group">
+          <label for="name">What is your name?</label>
+          <input type="text" id="name" class="form-control" placeholder="Your name here...">
+        </div>
+        <button id="send2" class="btn btn-default" type="submit">Send</button>
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <table id="conversation" class="table table-striped">
+        <thead>
+        <tr>
+          <th>Greetings</th>
+        </tr>
+        </thead>
+        <tbody id="greetings">
+        </tbody>
+      </table>
+    </div>
+  </div>
+  </form>
+</div>
+
+
+
+<script>
+
+  $(document).ready(function () {
+    if (!("WebSocket" in window)) {
+      $('#chatLog, input, button, #examples').fadeOut("fast");
+      $('<p>Oh no, you need a browser that supports WebSockets. How about <a href="http://www.google.com/chrome">Google Chrome</a>?</p>').appendTo('#container');
+    } else {
+
+      //The user has WebSockets
+
+      //connect();
+
+      function connect() {
+        //the connect function code is below
+        var host = "ws://localhost:3000/ws/counter";
+        var socket = new WebSocket(host);
+
+        socket.onopen = function(){
+          console.log('Socket Status: '+socket.readyState+' (open)');
+        };
+
+        socket.onmessage = function(msg){
+          console.log('Received: '+msg.data);
+        };
+
+        socket.onclose = function(){
+          console.log('Socket Status: '+socket.readyState+' (Closed)');
+        };
+
+        function send(text){
+          try{
+            socket.send(text);
+            console.log('Sent: '+text)
+          } catch(exception){
+            console.log('Error:' + exception);
+          }
+        }
+
+
+        $('#send').click(function() {
+          send($('#text').val());
+        });
+
+        $('#disconnect').click(function() {
+            socket.close();
+        })
+      }
+    }
+
+
+
+
+
+
+
+
+
+
+    var stompClient = null;
+
+    function setConnected(connected) {
+      $("#connect").prop("disabled", connected);
+      $("#disconnect2").prop("disabled", !connected);
+      if (connected) {
+        $("#conversation").show();
+      }
+      else {
+        $("#conversation").hide();
+      }
+      $("#greetings").html("");
+    }
+
+    function connect2() {
+      var socket = new SockJS('/ws/gs-guide-websocket');
+      stompClient = Stomp.over(socket);
+      stompClient.connect({}, function (frame) {
+        setConnected(true);
+        console.log('Connected: ' + frame);
+        stompClient.subscribe('/topic/greetings', function (greeting) {
+            console.log(greeting);
+          showGreeting(JSON.parse(greeting.body).content);
+        });
+      });
+    }
+
+    function disconnect2() {
+      if (stompClient != null) {
+        stompClient.disconnect();
+      }
+      setConnected(false);
+      console.log("Disconnected");
+    }
+
+    function sendName() {
+      stompClient.send("/ws/hello", {}, JSON.stringify({'name': $("#name").val()}));
+    }
+
+    function showGreeting(message) {
+      $("#greetings").append("<tr><td>" + message + "</td></tr>");
+    }
+
+    $(function () {
+      $("form").on('submit', function (e) {
+        e.preventDefault();
+      });
+      $( "#connect" ).click(function() { connect2(); });
+      $( "#disconnect2" ).click(function() { disconnect2(); });
+      $( "#send2" ).click(function() { sendName(); });
+    });
+  });
+
+
+
+</script>
+</body>
+</html>
