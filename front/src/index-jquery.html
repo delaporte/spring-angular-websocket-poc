@@ -152,11 +152,21 @@
     function connect2() {
       var socket = new SockJS('/ws/gs-guide-websocket');
       stompClient = Stomp.over(socket);
+//      stompClient.connect({}, function (frame) {
+//        setConnected(true);
+//        console.log('Connected: ' + frame);
+//        stompClient.subscribe('/topic/greetings', function (greeting) {
+//            console.log(greeting);
+//          showGreeting(JSON.parse(greeting.body).content);
+//        });
+//      });
+
+
       stompClient.connect({}, function (frame) {
         setConnected(true);
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/topic/greetings', function (greeting) {
-            console.log(greeting);
+        stompClient.subscribe('/topic/message/3', function (greeting) {
+          console.log(greeting);
           showGreeting(JSON.parse(greeting.body).content);
         });
       });
@@ -171,7 +181,8 @@
     }
 
     function sendName() {
-      stompClient.send("/ws/hello", {}, JSON.stringify({'name': $("#name").val()}));
+      //stompClient.send("/ws/hello", {}, JSON.stringify({'name': $("#name").val()}));
+      stompClient.send("/ws/message/3", {}, JSON.stringify({'name': $("#name").val()}));
     }
 
     function showGreeting(message) {

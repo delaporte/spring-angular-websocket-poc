@@ -1,4 +1,4 @@
-package net.wismas.websocket;
+package net.wismas.websocket.model;
 
 /**
  * Created by conta on 04/05/2017.

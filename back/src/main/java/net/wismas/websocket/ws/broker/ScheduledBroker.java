@@ -1,6 +1,6 @@
 package net.wismas.websocket.ws.broker;
 
-import net.wismas.websocket.Model;
+import net.wismas.websocket.model.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
